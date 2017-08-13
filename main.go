@@ -16,9 +16,7 @@ import (
 var (
 	mainlog = flag.String("mainlog", "/var/log/exim4/mainlog", "Path to the exim4 mainlog file.")
 	readall = flag.Bool("readall", false, "Read mainlog from beginning? Default (false) is to start at the end of the file and read only new lines.")
-	port    = flag.Int("port", 8443, "The port to listen on for HTTPS requests.")
-	cert    = flag.String("cert", "", "Path to the SSL certificate file for the HTTPS server. (optional)")
-	key     = flag.String("key", "", "Path to the SSL private key file for the HTTPS server. (optional)")
+	port    = flag.Int("port", 8002, "The port to listen on for HTTP requests.")
 )
 
 var (
@@ -35,7 +33,7 @@ func main() {
 	parseCommandline()
 	initPrometheus()
 	serverErrorChannel := startServer("/metrics", prometheus.Handler())
-	fmt.Printf("Starting server on https://localhost:%v/metrics\n", *port)
+	fmt.Printf("Starting server on http://localhost:%v/metrics\n", *port)
 	err := processLogLines(serverErrorChannel)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "%v\n", err.Error())
@@ -45,10 +43,6 @@ func main() {
 
 func parseCommandline() {
 	flag.Parse()
-	if len(*cert) == 0 && len(*key) > 0 || len(*cert) > 0 && len(*key) == 0 {
-		fmt.Fprintln(os.Stderr, "Syntax error: -cert and -key cannot be used without each other.")
-		os.Exit(-1)
-	}
 }
 
 func initPrometheus() {
@@ -61,11 +55,7 @@ func initPrometheus() {
 func startServer(path string, handler http.Handler) chan error {
 	result := make(chan error)
 	go func() {
-		if len(*cert) > 0 && len(*key) > 0 {
-			result <- server.Run(*port, *cert, *key, path, handler)
-		} else {
-			result <- server.RunWithDefaultKeys(*port, path, handler)
-		}
+		result <- server.Run(*port, path, handler)
 	}()
 	return result
 }

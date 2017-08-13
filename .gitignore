@@ -1,2 +1,4 @@
 example-logs
 .idea
+exim_prometheus_exporter
+mainlog
