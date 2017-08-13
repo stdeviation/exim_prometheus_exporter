@@ -3,9 +3,9 @@ package main
 import (
 	"flag"
 	"fmt"
-	"github.com/ActiveState/tail"
-	"github.com/fstab/exim_prometheus_exporter/metrics"
-	"github.com/fstab/exim_prometheus_exporter/server"
+	"github.com/hpcloud/tail"
+	"github.com/stdeviation/exim_prometheus_exporter/metrics"
+	"github.com/stdeviation/exim_prometheus_exporter/server"
 	"github.com/prometheus/client_golang/prometheus"
 	"net/http"
 	"os"

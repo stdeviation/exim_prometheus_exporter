@@ -34,7 +34,7 @@ Installation
 Make sure [Go](https://golang.org) is installed and the `GOPATH` environment variable is set, then run
 
 ```bash
-go get github.com/fstab/exim_prometheus_exporter
+go get github.com/stdeviation/exim_prometheus_exporter
 ```
 
 The executable will be created in `$GOPATH/bin`.
